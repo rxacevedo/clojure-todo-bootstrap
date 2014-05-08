@@ -3,6 +3,7 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [compojure.core :refer [defroutes GET]]
             [compojure.route :refer [not-found]]
+            [clojure.pprint :refer [pprint]]
             [hiccup.core :refer :all]))
 
 (defn hello [req]
@@ -14,6 +15,22 @@
   {:status 200
    :body "Goodbye, cruel world!"
    :headers {}})
+
+(defn about [req]
+  {:status 200
+   :body "Hi, I'm Roberto, and I made this!"
+   :headers {}})
+
+(defn request [req]
+  {:status 200
+   :body (with-out-str (pprint req))
+   :headers {}})
+
+(defn yo [req]
+  (let [name (get-in req [:route-params :name])]
+    {:status 200
+     :body (str "Yo! " name "!")
+     :headers {}}))
 
 (defn index [req]
   {:status 200
@@ -40,6 +57,9 @@
   (GET "/" [] index)
   (GET "/hello" []  hello)
   (GET "/goodbye" []  goodbye)
+  (GET "/about" [] about)
+  (GET "/request" [] request)
+  (GET "/yo/:name" [] yo)
   (not-found "Page not found."))
 
 (defn -main [port]
