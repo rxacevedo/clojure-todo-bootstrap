@@ -79,7 +79,7 @@
   (let [a (Integer. (get-in req [:route-params :a]))
         b (Integer. (get-in req [:route-params :b]))
         op (get-in req [:route-params :op])
-        f (op op-map)]
+        f (get op-map op)]
     (if f
       {:status 200
        :body (str (f a b))
