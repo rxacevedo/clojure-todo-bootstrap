@@ -6,6 +6,11 @@
             [clojure.pprint :refer [pprint]]
             [hiccup.core :refer :all]))
 
+(defn oops [req]
+  {:status 404
+   :body "ERROR 404"
+   :headers {}})
+
 (defn hello [req]
   {:status 200
    :body "Hello, world!"
@@ -14,6 +19,22 @@
 (defn goodbye [req]
   {:status 200
    :body "Goodbye, cruel world!"
+   :headers {}})
+
+(defn index [req]
+  {:status 200
+   :body (html [:html
+                [:head
+                 [:meta {:charset "utf-8"}]
+                 [:title "Clojure Webdev"]]
+                [:body
+                 [:header
+                  [:h1 "Hi there!"]]
+                 [:section
+                  [:ul
+                   [:li [:a {:href "/hello"} "Hello"]]
+                   [:li [:a {:href "/goodbye"} "Goodbye"]]]]
+                 [:footer]]])
    :headers {}})
 
 (defn about [req]
@@ -32,26 +53,38 @@
      :body (str "Yo! " name "!")
      :headers {}}))
 
-(defn index [req]
-  {:status 200
-   :body (html [:html
-                [:head
-                 [:meta {:charset "utf-8"}]
-                 [:title "Clojure Webdev"]]
-                [:body
-                 [:header
-                  [:h1 "Hi there!"]]
-                 [:section
-                  [:ul
-                   [:li [:a {:href "/hello"} "Hello"]]
-                   [:li [:a {:href "/goodbye"} "Goodbye"]]]]
-                 [:footer]]])
-   :headers {}})
+;; My way
+;; (defn calc [req]
+;;   (let [{:keys [opcode val1 val2]} (select-keys (:route-params req) [:opcode :val1 :val2])
+;;         op (condp = opcode
+;;              "+" "+"
+;;              "-" "-"
+;;              "*" "*"
+;;              ":" "/"
+;;              nil)]
+;;     {:status 200
+;;      :body (-> (str "(" op " " val1 " " val2 ")")
+;;                (read-string)
+;;                (eval)
+;;                (str))
+;;      :headers {}}))
 
-(defn oops [req]
-  {:status 404
-   :body "ERROR 404"
-   :headers {}})
+(def op-map
+  {"+" +
+   "-" -
+   "*" *
+   ":" /})
+
+(defn calc [req]
+  (let [a (Innteger. (get-in req [:route-params :a]))
+        b (Innteger. (get-in req [:route-params :b]))
+        op (get-in req [:route-params :op])
+        f (op op-map)]
+    (if f
+      {status 200
+       :body (str (f a b))
+       :headers {}}
+      (oops req))))
 
 (defroutes app
   (GET "/" [] index)
@@ -60,6 +93,7 @@
   (GET "/about" [] about)
   (GET "/request" [] request)
   (GET "/yo/:name" [] yo)
+  (GET "/calc/:a/:op/:b" [] calc)
   (not-found "Page not found."))
 
 (defn -main [port]
