@@ -81,7 +81,7 @@
         op (get-in req [:route-params :op])
         f (op op-map)]
     (if f
-      {status 200
+      {:status 200
        :body (str (f a b))
        :headers {}}
       (oops req))))
