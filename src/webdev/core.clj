@@ -76,8 +76,8 @@
    ":" /})
 
 (defn calc [req]
-  (let [a (Innteger. (get-in req [:route-params :a]))
-        b (Innteger. (get-in req [:route-params :b]))
+  (let [a (Integer. (get-in req [:route-params :a]))
+        b (Integer. (get-in req [:route-params :b]))
         op (get-in req [:route-params :op])
         f (op op-map)]
     (if f
