@@ -1,10 +1,23 @@
 (ns webdev.core
+  (:require [webdev.item
+             [model :as items]
+             [handler :refer [handle-index-items
+                                  handle-create-item]]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
-            [compojure.core :refer [defroutes GET]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.resource :refer [wrap-resource]]
+            [ring.middleware.file-info :refer [wrap-file-info]]
+            [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
-            [clojure.pprint :refer [pprint]]
+            [ring.handler.dump :refer [handle-dump]]            
             [hiccup.core :refer :all]))
+
+;; DB Connection
+
+(def db "jdbc:postgresql://postgres:postgres@localhost/webdev")
+
+;; Handlers
 
 (defn oops [req]
   {:status 404
@@ -42,32 +55,11 @@
    :body "Hi, I'm Roberto, and I made this!"
    :headers {}})
 
-(defn request [req]
-  {:status 200
-   :body (with-out-str (pprint req))
-   :headers {}})
-
 (defn yo [req]
   (let [name (get-in req [:route-params :name])]
     {:status 200
      :body (str "Yo! " name "!")
      :headers {}}))
-
-;; My way
-;; (defn calc [req]
-;;   (let [{:keys [opcode val1 val2]} (select-keys (:route-params req) [:opcode :val1 :val2])
-;;         op (condp = opcode
-;;              "+" "+"
-;;              "-" "-"
-;;              "*" "*"
-;;              ":" "/"
-;;              nil)]
-;;     {:status 200
-;;      :body (-> (str "(" op " " val1 " " val2 ")")
-;;                (read-string)
-;;                (eval)
-;;                (str))
-;;      :headers {}}))
 
 (def op-map
   {"+" +
@@ -86,18 +78,42 @@
        :headers {}}
       (oops req))))
 
-(defroutes app
+(defroutes routes
   (GET "/" [] index)
   (GET "/hello" []  hello)
   (GET "/goodbye" []  goodbye)
-  (GET "/about" [] about)
-  (GET "/request" [] request)
   (GET "/yo/:name" [] yo)
   (GET "/calc/:a/:op/:b" [] calc)
+  (GET "/about" [] about)
+
+  (ANY "/request" [] handle-dump)
+
+  (POST "/items" [] handle-create-item)
+  (GET "/items" [] handle-index-items)
   (not-found "Page not found."))
 
+;; Middleware
+
+(defn wrap-db [hdlr]
+  (fn [req]
+    (hdlr (assoc req :webdev/db db)))) ;; Wraps request
+
+(defn wrap-server [hdlr]
+  (fn [req]
+    (assoc-in (hdlr req) [:headers "Server"] "CUNT DESTROYER"))) ;; Wraps response
+
+(def app
+  (-> routes
+      (wrap-params)
+      (wrap-db)
+      (wrap-resource "static")
+      (wrap-file-info)
+      (wrap-server)))
+
 (defn -main [port]
+  (items/create-table db)
   (jetty/run-jetty app {:port (Integer. port)}))
 
 (defn -dev-main [port]
+  (items/create-table db)
   (jetty/run-jetty (wrap-reload #'app) {:port (Integer. port)}))
