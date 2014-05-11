@@ -15,7 +15,9 @@
 
 ;; DB Connection
 
-(def db "jdbc:postgresql://postgres:postgres@localhost/webdev")
+(def db
+  (or (System/getenv "DATABASE_URL")
+      "jdbc:postgresql://postgres:postgres@localhost/webdev"))
 
 ;; Handlers
 
