@@ -1,8 +1,7 @@
 (ns webdev.core
   (:require [webdev.item
              [model :as items]
-             [handler :refer [handle-index-items
-                                  handle-create-item]]])
+             [handler :refer [handle-index-items handle-create-item]]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
@@ -100,9 +99,9 @@
   (fn [req]
     (hdlr (assoc req :webdev/db db)))) ;; Wraps request
 
-(defn wrap-server [hdlr]
+ (defn wrap-server [hdlr]
   (fn [req]
-    (assoc-in (hdlr req) [:headers "Server"] "CUNT DESTROYER"))) ;; Wraps response
+    (assoc-in (hdlr req) [:headers "Server"] "Sulaco"))) ;; Wraps response
 
 (def app
   (-> routes
