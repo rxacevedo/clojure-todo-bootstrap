@@ -20,3 +20,15 @@
     {:status 302 ;; Redirect so that a browser reload does not re-post the form
      :headers {"Location" "/items"}
      :body ""}))
+
+(defn handle-delete-item [req]
+  (let [db (:webdev/db req)
+        item-id (java.util.UUID/fromString (get-in req [:route-params :item-id]))
+        exists? (delete-item db item-id)]
+    (if exists?
+      {:status 302
+       :headers {"Location" "/items"}
+       :body ""}
+      {:status 404
+       :body "List not found"
+       :headers {}})))

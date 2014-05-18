@@ -1,7 +1,7 @@
 (ns webdev.core
   (:require [webdev.item
              [model :as items]
-             [handler :refer [handle-index-items handle-create-item]]])
+             [handler :refer [handle-index-items handle-create-item handle-delete-item]]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
@@ -91,6 +91,7 @@
 
   (POST "/items" [] handle-create-item)
   (GET "/items" [] handle-index-items)
+  (DELETE "/items/:item-id" [] handle-delete-item)
   (not-found "Page not found."))
 
 ;; Middleware
