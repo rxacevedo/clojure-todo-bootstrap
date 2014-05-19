@@ -34,7 +34,7 @@
              :name "_method"
              :value "DELETE"}]
     [:div.btn-group
-     [:input.btn.btn-danger.btn-sx
+     [:input.btn.btn-danger.btn-xs
       {:type :submit
        :value "Delete"}]]]))
 
@@ -49,7 +49,7 @@
              :name "checked"
              :value (if checked "false" "true")}]
     [:div.btn-group
-     [:button.btn.btn-primary.btn-sx
+     [:button.btn.btn-primary.btn-xs
       (if checked "DONE" "TODO")]]]))
 
 (defn items-page [items]
