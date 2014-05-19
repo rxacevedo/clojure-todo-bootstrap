@@ -21,6 +21,19 @@
      :headers {"Location" "/items"}
      :body ""}))
 
+(defn handle-update-item [req]
+  (let [db (:webdev/db req)
+        item-id (java.util.UUID/fromString (get-in req [:route-params :item-id]))
+        checked (get-in req [:params "checked"])
+        exists? (update-item db item-id (= "true" checked))]
+    (if exists?
+      {:status 302
+       :headers {"Location" "/items"}
+       :body ""}
+      {:status 500
+       :body "An error occured while updating the item's status."
+       :headers {}})))
+
 (defn handle-delete-item [req]
   (let [db (:webdev/db req)
         item-id (java.util.UUID/fromString (get-in req [:route-params :item-id]))
