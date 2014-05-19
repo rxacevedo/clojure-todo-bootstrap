@@ -85,17 +85,24 @@
 
 (defroutes routes
   (GET "/" [] index)
-  ;; (GET "/hello" []  hello)
-  ;; (GET "/goodbye" []  goodbye)
-  ;; (GET "/yo/:name" [] yo)
-  ;; (GET "/calc/:a/:op/:b" [] calc)
-  ;; (GET "/about" [] about)
-
+  (GET "/hello" []  hello)
+  (GET "/goodbye" []  goodbye)
+  (GET "/yo/:name" [] yo)
+  (GET "/calc/:a/:op/:b" [] calc)
+  (GET "/about" [] about)
   (ANY "/request" [] handle-dump)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;        Todo list routes        ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (GET "/items" [] handle-index-items)
   (POST "/items" [] handle-create-item)
+  (PUT "/items/:item-id" [] handle-update-item)
+  (DELETE "/items/:item-id" [] handle-delete-item)
+  (not-found "Page not found."))
 
-  ;; Note: The below route will also work as a POST as long as no form params are
+  ;; Note: The DELETE route will also work as a POST as long as no form params are
   ;; supplied OR form params are supplied but the content-type is text/plain:
   ;;
   ;; Works:
@@ -130,10 +137,6 @@
   ;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
   ;;         {:form-params {"_method" "DELETE"}
   ;;          :content-type "text/plain"})
-
-  (DELETE "/items/:item-id" [] handle-delete-item)
-  (PUT "/items/:item-id" [] handle-update-item)
-  (not-found "Page not found."))
 
 ;; Middleware
 
