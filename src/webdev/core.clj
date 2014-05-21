@@ -1,11 +1,11 @@
 (ns webdev.core
   (:require [clojure.pprint :refer [pprint]])
-  (:require [webdev.item
-             [model :as items]
-             [handler :refer [handle-index-items
-                              handle-create-item
-                              handle-update-item
-                              handle-delete-item]]])
+  (:require [webdev.view :as view]
+            [webdev.item.model :as items]
+            [webdev.item.handler :refer [handle-index-items
+                                         handle-create-item
+                                         handle-update-item
+                                         handle-delete-item]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
@@ -41,18 +41,7 @@
 
 (defn index [req]
   {:status 200
-   :body (html [:html
-                [:head
-                 [:meta {:charset "utf-8"}]
-                 [:title "Clojure Webdev"]]
-                [:body
-                 [:header
-                  [:h1 "Hi there!"]]
-                 [:section
-                  [:ul
-                   [:li [:a {:href "/hello"} "Hello"]]
-                   [:li [:a {:href "/goodbye"} "Goodbye"]]]]
-                 [:footer]]])
+   :body (view/index-page)
    :headers {}})
 
 (defn about [req]
@@ -144,7 +133,7 @@
   (fn [req]
     (hdlr (assoc req :webdev/db db)))) ;; Wraps request
 
- (defn wrap-server [hdlr]
+(defn wrap-server [hdlr]
   (fn [req]
     (assoc-in (hdlr req) [:headers "Server"] "Sulaco"))) ;; Wraps response
 
