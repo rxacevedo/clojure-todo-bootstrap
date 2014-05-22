@@ -99,5 +99,5 @@
            [:div.col-sm-6
             [:h2 "Create a new item"]
             (new-item)]]
-          [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"}]
+          [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"}]
           [:script {:src "/bootstrap/js/bootstrap.min.js"}]]))

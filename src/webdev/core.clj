@@ -1,6 +1,8 @@
 (ns webdev.core
-  (:require [clojure.pprint :refer [pprint]])
+  (:require [clojure.pprint :refer [pprint]]
+            [clojure.data.json :as json])
   (:require [webdev.view :as view]
+            [webdev.handler :as handler]
             [webdev.item.model :as items]
             [webdev.item.handler :refer [handle-index-items
                                          handle-create-item
@@ -79,7 +81,7 @@
   (GET "/yo/:name" [] yo)
   (GET "/calc/:a/:op/:b" [] calc)
   (GET "/about" [] about)
-  (ANY "/request" [] handle-dump)
+  (ANY "/echo" [] handler/handle-echo)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;        Todo list routes        ;;
@@ -149,7 +151,7 @@
       (hdlr req))))
 
 
-(defn print-req [hdlr]
+(defn wrap-print-to-console [hdlr]
   "Prints the request to console, then passes it to the handler"
   (fn [req]
     (do (pprint req)
@@ -158,7 +160,7 @@
 (def app
   (-> routes
       (wrap-simulated-methods) ;; Seems to work with or without this..?
-      ;; (print-req)
+      ;; (wrap-print-to-console)
       (wrap-params)
       (wrap-db)
       (wrap-resource "static")
