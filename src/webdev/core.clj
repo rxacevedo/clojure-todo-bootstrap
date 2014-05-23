@@ -1,8 +1,6 @@
 (ns webdev.core
-  (:require [clojure.pprint :refer [pprint]]
-            [clojure.data.json :as json])
-  (:require [webdev.view :as view]
-            [webdev.handler :as handler]
+  (:require [clojure.pprint :refer [pprint]])
+  (:require [webdev.handler :refer :all]
             [webdev.item.model :as items]
             [webdev.item.handler :refer [handle-index-items
                                          handle-create-item
@@ -15,8 +13,7 @@
             [ring.middleware.file-info :refer [wrap-file-info]]
             [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
-            [ring.handler.dump :refer [handle-dump]]            
-            [hiccup.core :refer :all]))
+            [ring.handler.dump :refer [handle-dump]]))
 
 ;; DB Connection
 
@@ -24,64 +21,19 @@
   (or (System/getenv "DATABASE_URL")
       "jdbc:postgresql://postgres:postgres@localhost/webdev"))
 
-;; Handlers
-
-(defn oops [req]
-  {:status 404
-   :body "ERROR 404"
-   :headers {}})
-
-(defn hello [req]
-  {:status 200
-   :body "Hello, world!"
-   :headers {}})
-
-(defn goodbye [req]
-  {:status 200
-   :body "Goodbye, cruel world!"
-   :headers {}})
-
-(defn index [req]
-  {:status 200
-   :body (view/index-page)
-   :headers {}})
-
-(defn about [req]
-  {:status 200
-   :body "Hi, I'm Roberto, and I made this!"
-   :headers {}})
-
-(defn yo [req]
-  (let [name (get-in req [:route-params :name])]
-    {:status 200
-     :body (str "Yo! " name "!")
-     :headers {}}))
-
-(def op-map
-  {"+" +
-   "-" -
-   "*" *
-   ":" /})
-
-(defn calc [req]
-  (let [a (Integer. (get-in req [:route-params :a]))
-        b (Integer. (get-in req [:route-params :b]))
-        op (get-in req [:route-params :op])
-        f (get op-map op)]
-    (if f
-      {:status 200
-       :body (str (f a b))
-       :headers {}}
-      (oops req))))
-
 (defroutes routes
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;          Intro stuff           ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (GET "/" [] index)
   (GET "/hello" []  hello)
   (GET "/goodbye" []  goodbye)
   (GET "/yo/:name" [] yo)
   (GET "/calc/:a/:op/:b" [] calc)
   (GET "/about" [] about)
-  (ANY "/echo" [] handler/handle-echo)
+  (ANY "/echo" [] handle-echo)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;        Todo list routes        ;;
@@ -93,41 +45,41 @@
   (DELETE "/items/:item-id" [] handle-delete-item)
   (not-found "Page not found."))
 
-  ;; Note: The DELETE route will also work as a POST as long as no form params are
-  ;; supplied OR form params are supplied but the content-type is text/plain:
-  ;;
-  ;; Works:
-  ;; (c/post "http://localhost:8000/items/bbdb1c07-ad67-46cd-8eff-dbad031d6113"
-  ;;         {:content-type "text/plain"})
-  ;; Works;
-  ;; (c/post "http://localhost:8000/items/cf269dbf-ad27-406a-8a39-b761fb91a447"
-  ;;         {:content-type "application/x-www-form-urlencoded"})
-  ;; Works:
-  ;; (c/post "http://localhost:8000/items/f4c55900-4fb9-4161-999a-93fbeda22420"
-  ;;         {:form-params {"_method" "DELETE"}
-  ;;          :content-type "text/plain"})
-  ;; Doesn't work:
-  ;; (c/post "http://localhost:8000/items/017668ad-df05-47cd-805e-532e09e49607"
-  ;;         {:form-params {"_method" "DELETE"}})
-  ;; Doesn't work:
-  ;; (c/post "http://localhost:8000/items/f4c55900-4fb9-4161-999a-93fbeda22420"
-  ;;         {:form-params {"_method" "DELETE"}
-  ;;          :content-type "application/x-www-form-urlencoded"})
-  ;;
-  ;; ALTHOUGH...changing the route to listen on DELETE requests allows the last two methods to work
-  ;; WITHOUT the wrap-simulated-methods middleware.
-  ;;
-  ;; Works:
-  ;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
-  ;;         {:form-params {"_method" "DELETE"}
-  ;;          :content-type "application/x-www-form-urlencoded"})
-  ;; Doesn't work
-  ;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
-  ;;         {:form-params {"_method" "DELETE"}})
-  ;; Doesn't work
-  ;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
-  ;;         {:form-params {"_method" "DELETE"}
-  ;;          :content-type "text/plain"})
+;; Note: The DELETE route will also work as a POST as long as no form params are
+;; supplied OR form params are supplied but the content-type is text/plain:
+;;
+;; Works:
+;; (c/post "http://localhost:8000/items/bbdb1c07-ad67-46cd-8eff-dbad031d6113"
+;;         {:content-type "text/plain"})
+;; Works;
+;; (c/post "http://localhost:8000/items/cf269dbf-ad27-406a-8a39-b761fb91a447"
+;;         {:content-type "application/x-www-form-urlencoded"})
+;; Works:
+;; (c/post "http://localhost:8000/items/f4c55900-4fb9-4161-999a-93fbeda22420"
+;;         {:form-params {"_method" "DELETE"}
+;;          :content-type "text/plain"})
+;; Doesn't work:
+;; (c/post "http://localhost:8000/items/017668ad-df05-47cd-805e-532e09e49607"
+;;         {:form-params {"_method" "DELETE"}})
+;; Doesn't work:
+;; (c/post "http://localhost:8000/items/f4c55900-4fb9-4161-999a-93fbeda22420"
+;;         {:form-params {"_method" "DELETE"}
+;;          :content-type "application/x-www-form-urlencoded"})
+;;
+;; ALTHOUGH...changing the route to listen on DELETE requests allows the last two methods to work
+;; WITHOUT the wrap-simulated-methods middleware.
+;;
+;; Works:
+;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
+;;         {:form-params {"_method" "DELETE"}
+;;          :content-type "application/x-www-form-urlencoded"})
+;; Doesn't work
+;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
+;;         {:form-params {"_method" "DELETE"}})
+;; Doesn't work
+;; (c/post "http://localhost:8000/items/ab2667e3-39ba-46c8-a7b4-59b5e0553f4a"
+;;         {:form-params {"_method" "DELETE"}
+;;          :content-type "text/plain"})
 
 ;; Middleware
 
@@ -146,10 +98,9 @@
 (defn wrap-simulated-methods [hdlr]
   (fn [req]
     (if-let [method (and (= :post (:request-method req))
-                         (sim-methods (get-in req [:params "_method"])))]
+                         (sim-methods (get-in req [:params "_method"])))] ;; Returns the keyword
       (hdlr (assoc req :request-method method))
       (hdlr req))))
-
 
 (defn wrap-print-to-console [hdlr]
   "Prints the request to console, then passes it to the handler"
@@ -160,17 +111,14 @@
 (def app
   (-> routes
       (wrap-simulated-methods) ;; Seems to work with or without this..?
-      ;; (wrap-print-to-console)
       (wrap-params)
       (wrap-db)
       (wrap-resource "static")
       (wrap-file-info)
-      (wrap-server)))
+      (wrap-server)
+      ;; (wrap-print-to-console)
+      ))
 
 (defn -main [port]
   (items/create-table db)
   (jetty/run-jetty app {:port (Integer. port)}))
-
-(defn -dev-main [port]
-  (items/create-table db)
-  (jetty/run-jetty (wrap-reload #'app) {:port (Integer. port)}))

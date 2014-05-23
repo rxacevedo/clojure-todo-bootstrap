@@ -32,7 +32,6 @@
             [:ul.nav.nav-pills.mynav
              [:li.active [:a {:href "/"} "Home"]]
              [:li [:a {:href "/items"} "Todos"]]
-             ;; TODO: Dropdown
              [:li.dropdown
               [:a.dropdown-toggle {:data-toggle "dropdown"
                                    :href "#"}
