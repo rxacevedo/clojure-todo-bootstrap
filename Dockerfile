@@ -4,4 +4,4 @@ RUN mkdir /code
 ADD . /code
 WORKDIR /code
 RUN lein deps
-CMD ["lein", "run", "3000"]
+CMD ["lein", "run", "80"]

@@ -12,6 +12,7 @@
                  [postgresql/postgresql "9.1-901.jdbc4"]]
   :min-lein-version "2.0.0"
   :uberjar-name "webdev.jar"
-  :repl-options {:init-ns user}
+  :repl-options {:host "0.0.0.0"
+                 :port 4001}
   :main webdev.core
   :profiles {:uberjar {:aot :all}})
