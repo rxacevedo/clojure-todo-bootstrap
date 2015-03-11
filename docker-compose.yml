@@ -1,0 +1,14 @@
+web:
+  build: .
+  volumes:
+    - "$PWD:/code"
+  ports:
+    - "3000:3000"
+  links:
+    - db
+db:
+  image: postgres
+  ports:
+    - "5432:5432"
+  environment:
+    POSTGRES_PASSWORD: mysecretpassword

@@ -19,7 +19,7 @@
 
 (def db
   (or (System/getenv "DATABASE_URL")
-      "jdbc:postgresql://postgres:postgres@localhost/webdev"))
+      "jdbc:postgresql://postgres:mysecretpassword@192.168.59.103/postgres"))
 
 (defroutes routes
 
