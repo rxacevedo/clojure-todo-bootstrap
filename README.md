@@ -7,7 +7,7 @@ Following along with the [Clojure Webdev](http://www.purelyfunctional.tv/web-dev
 ## Usage
 
 ``` bash
-lein run <port>
+docker-compose up
 ```
 
 ## License
