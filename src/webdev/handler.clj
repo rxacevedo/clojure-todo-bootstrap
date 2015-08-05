@@ -31,11 +31,6 @@
    :body (view/index-page)
    :headers {}})
 
-(defn about [req]
-  {:status 200
-   :body "Hi, I'm Roberto, and I made this!"
-   :headers {}})
-
 (defn yo [req]
   (let [name (get-in req [:route-params :name])]
     {:status 200

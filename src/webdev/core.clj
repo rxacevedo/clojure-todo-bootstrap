@@ -11,6 +11,7 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.file-info :refer [wrap-file-info]]
+            [ring.util.response :refer [redirect]]
             [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
             [ring.handler.dump :refer [handle-dump]]))
@@ -19,7 +20,7 @@
 
 (def db
   (or (System/getenv "DATABASE_URL")
-      "jdbc:postgresql://postgres:mysecretpassword@database/postgres"))
+      (str "jdbc:postgresql://postgres:" (System/getenv "POSTGRES_PASSWORD") "@db/postgres")))
 
 (defroutes routes
 
@@ -27,13 +28,11 @@
   ;;          Intro stuff           ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (GET "/" [] index)
+  (GET "/" [] (redirect "/items"))
   (GET "/hello" []  hello)
   (GET "/goodbye" []  goodbye)
   (GET "/yo/:name" [] yo)
   (GET "/calc/:a/:op/:b" [] calc)
-  (GET "/about" [] about)
-  (ANY "/echo" [] handle-echo)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;        Todo list routes        ;;
@@ -116,8 +115,7 @@
       (wrap-resource "static")
       (wrap-file-info)
       (wrap-server)
-      ;; (wrap-print-to-console)
-      ))
+      (wrap-reload)))
 
 (defn -main [port]
   (items/create-table db)

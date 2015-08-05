@@ -2,21 +2,6 @@
   (:require [hiccup.core :refer [h html]]
             [hiccup.page :refer [html5]]))
 
-;; (defn nav-element [active]
-;;   [:nav.navbar.navbar-default {:role "navigation"}
-;;    [:div.container
-;;     [:ul.nav.nav-pills.mynav
-;;      [:li.active [:a {:href "/"} "Home"]]
-;;      [:li [:a {:href "/items"} "Todos"]]
-;;      [:li.dropdown
-;;       [:a.dropdown-toggle {:data-toggle "dropdown"
-;;                            :href "#"}
-;;        "Giggles"
-;;        [:span.caret]]
-;;       [:ul.dropdown-menu
-;;        [:li [:a {:href "/hello"} "Hello"]]
-;;        [:li [:a {:href "/goodbye"} "Goodbye"]]]]]]])
-
 (defn index-page []
   (html5 {:lang :en}
          [:head

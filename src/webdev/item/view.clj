@@ -65,17 +65,7 @@
           [:nav.navbar.navbar-default {:role "navigation"}
            [:div.container
             [:ul.nav.nav-pills.mynav
-             [:li [:a {:href "/"} "Home"]]
-             [:li.active [:a {:href "/items"} "Todos"]]
-             [:li.dropdown
-              [:a.dropdown-toggle
-               {:data-toggle "dropdown"
-                :href "#"}
-               "Giggles"
-               [:span.caret]]
-              [:ul.dropdown-menu
-               [:li [:a {:href "/hello"} "Hello"]]
-               [:li [:a {:href "/goodbye"} "Goodbye"]]]]]]]]
+             [:li.active [:a {:href "/items"} "Todos"]]]]]]
          [:body
           [:div.container
            [:h1 "My Items"]
