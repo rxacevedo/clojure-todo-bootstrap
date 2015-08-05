@@ -1,6 +1,6 @@
-# clojure webdev
+# clojure-todo-bootstrap
 
-[!["Travis CI"](https://travis-ci.org/rxacevedo/clojure_webdev.svg?branch=master)](https://travis-ci.org/rxacevedo/clojure_webdev)
+[!["Travis CI"](https://travis-ci.org/rxacevedo/clojure-todo-bootstrap.svg?branch=master)](https://travis-ci.org/rxacevedo/clojure-todo-bootstrap)
 
 Following along with the [Clojure Webdev](http://www.purelyfunctional.tv/web-dev-in-clojure) videos put together by [Eric Normand](http://www.lispcast.com/).
 
