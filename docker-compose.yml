@@ -1,8 +1,7 @@
 web:
-  # build: .
-  # volumes:
-  #   - $PWD:/code
-  image: rxacevedo/clojure-todo-bootstrap
+  build: .
+  volumes:
+    - $PWD:/app
   ports:
     - "80:80"
   links:
