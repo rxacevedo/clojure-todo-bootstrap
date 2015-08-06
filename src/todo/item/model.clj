@@ -1,4 +1,4 @@
-(ns webdev.item.model
+(ns todo.item.model
   (:require [clojure.java.jdbc :as db]))
 
 (defn create-table [db]

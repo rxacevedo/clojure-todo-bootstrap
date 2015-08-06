@@ -1,5 +1,5 @@
-(defproject webdev "0.1.0-SNAPSHOT"
-  :description "Clojure webdev tutorial project"
+(defproject todo "0.1.0-SNAPSHOT"
+  :description "Clojure webdev tutorial project - a simple Postgres-backed todo list."
   :url "https://github.com/rxacevedo/clojure-todo-bootstrap"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -12,6 +12,5 @@
                  [postgresql/postgresql "9.1-901.jdbc4"]]
   :min-lein-version "2.0.0"
   :uberjar-name "todo.jar"
-  :repl-options {:host "0.0.0.0"}
-  :main webdev.core
+  :main todo.core
   :profiles {:uberjar {:aot :all}})

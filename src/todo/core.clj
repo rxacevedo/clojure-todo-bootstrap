@@ -1,11 +1,11 @@
-(ns webdev.core
+(ns todo.core
   (:require [clojure.pprint :refer [pprint]])
-  (:require [webdev.handler :refer :all]
-            [webdev.item.model :as items]
-            [webdev.item.handler :refer [handle-index-items
-                                         handle-create-item
-                                         handle-update-item
-                                         handle-delete-item]])
+  (:require [todo.handler :refer :all]
+            [todo.item.model :as items]
+            [todo.item.handler :refer [handle-index-items
+                                       handle-create-item
+                                       handle-update-item
+                                       handle-delete-item]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
@@ -84,7 +84,7 @@
 
 (defn wrap-db [hdlr]
   (fn [req]
-    (hdlr (assoc req :webdev/db db)))) ;; Wraps request
+    (hdlr (assoc req :todo/db db)))) ;; Wraps request
 
 (defn wrap-server [hdlr]
   (fn [req]

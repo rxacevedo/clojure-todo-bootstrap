@@ -1,4 +1,4 @@
-(ns webdev.view
+(ns todo.view
   (:require [hiccup.core :refer [h html]]
             [hiccup.page :refer [html5]]))
 

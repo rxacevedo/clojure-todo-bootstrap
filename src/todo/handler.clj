@@ -1,6 +1,6 @@
-(ns webdev.handler
+(ns todo.handler
   (:require [clojure.pprint :refer [pprint]])
-  (:require [webdev.view :as view]))
+  (:require [todo.view :as view]))
 
 ;; Util
 
