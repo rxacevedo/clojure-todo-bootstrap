@@ -1,6 +1,6 @@
-(ns webdev.core-test
+(ns todo.core-test
   (:require [clojure.test :refer :all]
-            [webdev.core :refer :all]))
+            [todo.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
