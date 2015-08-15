@@ -1,14 +1,12 @@
 web:
-  build: .
-  volumes:
-    - $PWD:/app
+  image: rxacevedo/clojure-todo-bootstrap
   ports:
-    - 80:80
+    - 3000:3000
   links:
     - db
   environment:
     POSTGRES_PASSWORD: mysecretpassword
-  command: lein run 80
+  command: lein run 3000
 db:
   image: postgres
   environment:

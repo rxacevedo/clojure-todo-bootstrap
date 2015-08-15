@@ -1,5 +1,3 @@
-FROM clojure:latest
+FROM clojure:onbuild
 MAINTAINER rxacevedo@fastmail.com
-ADD . /app
-WORKDIR /app
 CMD ["lein", "run", "3000"]
